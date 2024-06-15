@@ -29,15 +29,15 @@ jobs:
           
           # Copy the script to the EC2 instance
           echo "Copying script to EC2 instance..."
-          scp -o StrictHostKeyChecking=no -i private_key ./00_ec2/ec2_user_data.sh ${USER_NAME}@${HOSTNAME}:/home/${USER_NAME}/ec2_user_data.sh
+          scp -o StrictHostKeyChecking=no -i private_key ./00_ec2/ec2_user_data.sh ubuntu@${HOSTNAME}:/home/ubuntu/ec2_user_data.sh
           
           # Verify the file was copied correctly
           echo "Verifying script on EC2 instance..."
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} 'ls -l /home/${USER_NAME}/ec2_user_data.sh'
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} 'ls -l /home/ubuntu/ec2_user_data.sh'
           
           # SSH into the EC2 instance and run the script
           echo "Running script on EC2 instance..."
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-            chmod +x /home/${USER_NAME}/ec2_user_data.sh &&
-            /home/${USER_NAME}/ec2_user_data.sh
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} '
+            chmod +x /home/ubuntu/ec2_user_data.sh &&
+            /home/ubuntu/ec2_user_data.sh
           '
