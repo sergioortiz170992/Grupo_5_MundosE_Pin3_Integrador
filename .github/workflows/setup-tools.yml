@@ -17,9 +17,14 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOSTNAME: 184.73.139.147
-          USER_NAME: ubuntu
 
         run: |
+          USER_NAME="ubuntu"
+          
+          echo "Debugging Environment Variables"
+          echo "Hostname: ${HOSTNAME}"
+          echo "Username: ${USER_NAME}"
+          
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           
           # Copy the script to the EC2 instance
