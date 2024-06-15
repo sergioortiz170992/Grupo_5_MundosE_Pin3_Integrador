@@ -1,28 +1,32 @@
-name: CI/CD Pipeline
+name: Deploy
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
-  build:  # Added job name for clarity
+  Deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  deploy:  # Added optional deployment job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to AWS (Optional)
-        uses: actions/ssh@v3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}  # Encrypted private key
-      - name: Run deployment script
+      - name: Upload and run script on EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.SSH_HOST }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+
         run: |
-          chmod +x /00_ec2/ec2_user_data.sh
-          /00_ec2/ec2_user_data.sh
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          
+          # Copy the script to the EC2 instance
+          scp -o StrictHostKeyChecking=no -i private_key ./00_ec2/ec2_user_data.sh ${USER_NAME}@${HOSTNAME}:/home/${USER_NAME}/ec2_user_data.sh
+
+          # SSH into the EC2 instance and run the script
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            chmod +x /home/${USER_NAME}/ec2_user_data.sh
+            /home/${USER_NAME}/ec2_user_data.sh
+          '
