@@ -1,0 +1,28 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:  # Added job name for clarity
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+  deploy:  # Added optional deployment job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to AWS (Optional)
+        uses: actions/ssh@v3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}  # Encrypted private key
+      - name: Run deployment script
+        run: |
+          chmod +x /00_ec2/ec2_user_data.sh
+          /00_ec2/ec2_user_data.sh
