@@ -16,7 +16,7 @@ jobs:
       - name: Upload and run script on EC2
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{ secrets.SSH_HOST }}
+          HOSTNAME: 184.73.139.147
           USER_NAME: ${{ secrets.USER_NAME }}
 
         run: |
