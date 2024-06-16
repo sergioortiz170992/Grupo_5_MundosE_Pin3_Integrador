@@ -13,13 +13,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       - name: Upload and run script on EC2
         env:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOSTNAME: 184.73.139.147
 
         run: |
-          USER_NAME="ubuntu"
+          export USER_NAME="ubuntu"
           
           echo "Debugging Environment Variables"
           echo "Hostname: ${HOSTNAME}"
@@ -29,21 +36,15 @@ jobs:
           
           # Copy the script to the EC2 instance
           echo "Copying script to EC2 instance..."
-          scp -o StrictHostKeyChecking=no -i private_key ./00_ec2/ec2_user_data.sh ubuntu@${HOSTNAME}:/home/ubuntu/ec2_user_data.sh
+          scp -o StrictHostKeyChecking=no -i private_key ./00_ec2/ec2_user_data.sh ${USER_NAME}@${HOSTNAME}:/home/${USER_NAME}/ec2_user_data.sh
           
           # Verify the file was copied correctly
           echo "Verifying script on EC2 instance..."
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} 'ls -l /home/ubuntu/ec2_user_data.sh'
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} 'ls -l /home/${USER_NAME}/ec2_user_data.sh'
           
           # SSH into the EC2 instance and run the script
           echo "Running script on EC2 instance..."
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${HOSTNAME} '
-            chmod +x /home/ubuntu/ec2_user_data.sh &&
-            /home/ubuntu/ec2_user_data.sh
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            chmod +x /home/${USER_NAME}/ec2_user_data.sh &&
+            /home/${USER_NAME}/ec2_user_data.sh
           '
-      - name: Configure AWS Credentials
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region ${{ secrets.AWS_DEFAULT_REGION }}
-
