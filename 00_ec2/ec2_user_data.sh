@@ -1,9 +1,16 @@
 #!/bin/bash
 
-echo "Installing AWS CLI"
+echo "Installing unzip utility"
+sudo apt-get update && sudo apt-get install -y unzip
+
+echo "Downloading AWS CLI"
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+echo "Installing AWS CLI"
 unzip awscliv2.zip
 sudo ./aws/install
+
+echo "Checking AWS CLI version"
 aws --version
 
 echo "Installing kubectl"
