@@ -5,6 +5,8 @@
 # The Kubernetes provider is included in this file so the EKS module can complete successfully. Otherwise, it throws an error when creating `kubernetes_config_map.aws_auth`.
 # You should **not** schedule deployments and services in this workspace. This keeps workspaces modular (one for provision EKS, another for scheduling Kubernetes resources) as per best practices.
 
+#  Configura el proveedor de Kubernetes en Terraform para interactuar con el clúster EKS.
+# provider "kubernetes": Define el proveedor de Kubernetes con los detalles del clúster EKS.
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   token                  = data.aws_eks_cluster_auth.cluster.token
