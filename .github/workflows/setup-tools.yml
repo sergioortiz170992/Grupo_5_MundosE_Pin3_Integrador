@@ -36,7 +36,8 @@ jobs:
           
           # Verify the file was copied correctly
           echo "Verifying script on EC2 instance..."
-          ssh -o StrictHostKeyChecking=no -i private_key "${user}@${HOSTNAME}" "ls -l /home/${user}/ec2_user_data.sh"
+          mkdir /home/${user}/Actions/
+          ssh -o StrictHostKeyChecking=no -i private_key "${user}@${HOSTNAME}" "ls -l /home/${user}/Actions/ec2_user_data.sh"
           
           # SSH into the EC2 instance and run the script
           echo "Running script on EC2 instance..."
