@@ -16,12 +16,12 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     root_volume_type = "gp2"
-    instance_types = ["t2.small"]
+    instance_types = ["t2.micro"]
   }
   eks_managed_node_groups = {
     one = {
       name                    = "worker-group-1"
-      instance_type           = "t2.small"
+      instance_type           = "t2.micro"
       desired_size            = 2
       pre_bootstrap_user_data = <<-EOT
       echo 'foo bar'
