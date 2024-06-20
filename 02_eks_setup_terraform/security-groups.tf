@@ -1,3 +1,5 @@
+# Configura los grupos de seguridad para los nodos del clúster.
+# aws_security_group: Define varios grupos de seguridad con reglas de ingreso específicas.
 
 resource "aws_security_group" "worker_group_mgmt_one" {
   name_prefix = "worker_group_mgmt_one"
