@@ -1,3 +1,5 @@
+# Define las salidas (outputs) de Terraform que proporcionan información sobre el clúster EKS.
+# Diferentes salidas que incluyen cluster_id, cluster_endpoint, cluster_security_group_id, entre otros.
 output "cluster_id" {
   description = "EKS cluster ID."
   value       = module.eks.cluster_id
