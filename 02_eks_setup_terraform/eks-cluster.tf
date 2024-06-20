@@ -1,4 +1,5 @@
-module "eks" {
+#Configura un clúster EKS utilizando un módulo de Terraform predefinido.
+module "eks" {  # "eks": Uso del módulo terraform-aws-modules/eks/aws para crear el clúster EKS.
   source          = "terraform-aws-modules/eks/aws"
   version         = "18.26.6"
   cluster_name    = local.cluster_name
@@ -14,11 +15,11 @@ module "eks" {
     GithubOrg   = "terraform-aws-modules"
   }
 
-  eks_managed_node_group_defaults = {
+  eks_managed_node_group_defaults = {  #  Configuración de grupos de nodos gestionados
     root_volume_type = "gp2"
     instance_types = ["t2.micro"]
   }
-  eks_managed_node_groups = {
+  eks_managed_node_groups = { 
     one = {
       name                    = "worker-group-1"
       instance_type           = "t2.micro"
@@ -26,7 +27,7 @@ module "eks" {
       pre_bootstrap_user_data = <<-EOT
       echo 'foo bar'
       EOT
-       vpc_security_group_ids = [aws_security_group.worker_group_mgmt_one.id ]
+       vpc_security_group_ids = [aws_security_group.worker_group_mgmt_one.id ] # one esta haciendo referencia al group one = linea 23
     }
 
     #two = {
@@ -40,7 +41,9 @@ module "eks" {
     #}
   }
 }
-  
+
+# data "aws_eks_cluster" y data "aws_eks_cluster_auth": Obtención de datos del clúster EKS recién creado
+
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id
 }
