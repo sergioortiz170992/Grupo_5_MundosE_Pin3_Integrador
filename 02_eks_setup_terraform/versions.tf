@@ -1,3 +1,5 @@
+# Especifica las versiones requeridas de Terraform y de los proveedores necesarios.
+# terraform: Define las versiones de los proveedores aws, random, local, null y kubernetes.
 terraform {
   required_providers {
     aws = {
